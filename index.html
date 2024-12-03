@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Camera Stabilization</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        video, canvas {
+            max-width: 90%;
+            height: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Camera Stabilization</h1>
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="stabilizedCanvas"></canvas>
+    <script src="opencv.js"></script> <!-- Include OpenCV.js -->
+    <script>
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('stabilizedCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Access the camera
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+
+                video.onloadedmetadata = () => {
+                    video.play();
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    stabilizeVideo();
+                };
+            } catch (error) {
+                console.error('Error accessing the camera:', error);
+            }
+        }
+
+        // Stabilization logic
+        function stabilizeVideo() {
+            const fps = 30; // Frames per second for stabilization
+            setInterval(() => {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Example: Stabilization logic placeholder
+                // Replace with actual stabilization algorithms using OpenCV.js or another library
+                // Here, just demonstrating that the video frame is drawn
+            }, 1000 / fps);
+        }
+
+        startCamera();
+    </script>
+</body>
+</html>
